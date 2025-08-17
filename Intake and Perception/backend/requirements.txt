@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+pydantic
+python-multipart
+Pillow
+transformers
+torch
+numpy
+mistralai
+requests
+python-dotenv
