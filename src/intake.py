@@ -10,10 +10,9 @@ router = APIRouter()
 
 # --- Part 1: Hugging Face Dedicated Endpoint Configuration ---
 
-# IMPORTANT: Get your token from your Hugging Face account settings
-HF_API_TOKEN = "hf_YourApiTokenGoesHere" 
-# IMPORTANT: Paste the unique URL you received after creating your endpoint
-API_URL = "https://YOUR-UNIQUE-ENDPOINT-URL.endpoints.huggingface.cloud" 
+
+HF_API_TOKEN = "hf" 
+API_URL = "httpd" 
 
 # Renamed prompts for clarity
 LLAVA_PROMPT_MEAL = (
