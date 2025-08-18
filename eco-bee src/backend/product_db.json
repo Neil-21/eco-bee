@@ -1,0 +1,127 @@
+{
+  "1234567890123": {
+    "name": "Organic Quinoa Salad",
+    "brand": "EcoFresh",
+    "category": "plant-based",
+    "type": "food",
+    "materials": [
+      "organic",
+      "plant-based"
+    ],
+    "sustainability": {
+      "climate": 15,
+      "biosphere": 10,
+      "biogeochemical": 20,
+      "freshwater": 25,
+      "aerosols": 15
+    },
+    "certifications": [
+      "Organic",
+      "Fair Trade"
+    ],
+    "packaging": "recyclable"
+  },
+  "2345678901234": {
+    "name": "Beef Burger Meal",
+    "brand": "FastFood Co",
+    "category": "meat-heavy",
+    "type": "food",
+    "materials": [
+      "meat",
+      "processed"
+    ],
+    "sustainability": {
+      "climate": 85,
+      "biosphere": 80,
+      "biogeochemical": 75,
+      "freshwater": 70,
+      "aerosols": 60
+    },
+    "certifications": [],
+    "packaging": "mixed"
+  },
+  "3456789012345": {
+    "name": "Oat Milk Latte",
+    "brand": "Plant Caf\u00e9",
+    "category": "drink",
+    "type": "food",
+    "materials": [
+      "plant-based",
+      "oat"
+    ],
+    "sustainability": {
+      "climate": 20,
+      "biosphere": 25,
+      "biogeochemical": 30,
+      "freshwater": 35,
+      "aerosols": 25
+    },
+    "certifications": [
+      "Organic"
+    ],
+    "packaging": "recyclable"
+  },
+  "4567890123456": {
+    "name": "Organic Cotton T-Shirt",
+    "brand": "EcoWear",
+    "category": "cotton",
+    "type": "clothing",
+    "materials": [
+      "organic cotton",
+      "natural"
+    ],
+    "sustainability": {
+      "climate": 25,
+      "biosphere": 20,
+      "biogeochemical": 35,
+      "freshwater": 40,
+      "aerosols": 20
+    },
+    "certifications": [
+      "GOTS",
+      "Fair Trade"
+    ],
+    "packaging": "minimal"
+  },
+  "5678901234567": {
+    "name": "Polyester Jacket",
+    "brand": "Fashion Fast",
+    "category": "synthetic",
+    "type": "clothing",
+    "materials": [
+      "polyester",
+      "synthetic"
+    ],
+    "sustainability": {
+      "climate": 75,
+      "biosphere": 60,
+      "biogeochemical": 40,
+      "freshwater": 30,
+      "aerosols": 80
+    },
+    "certifications": [],
+    "packaging": "plastic"
+  },
+  "6789012345678": {
+    "name": "Recycled Wool Sweater",
+    "brand": "CircularFashion",
+    "category": "recycled",
+    "type": "clothing",
+    "materials": [
+      "recycled wool",
+      "natural"
+    ],
+    "sustainability": {
+      "climate": 20,
+      "biosphere": 25,
+      "biogeochemical": 20,
+      "freshwater": 25,
+      "aerosols": 30
+    },
+    "certifications": [
+      "Recycled",
+      "Responsible Wool"
+    ],
+    "packaging": "recyclable"
+  }
+}
