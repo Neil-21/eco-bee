@@ -85,6 +85,16 @@ class PixtralBarcodeScanner:
                         "description": sustainability_info.get("description"),
                         "ingredients": sustainability_info.get("ingredients", [])
                     }
+                    
+                    # Update product_info with correct name and brand from sustainability data
+                    if barcode_result.get("product_info"):
+                        barcode_result["product_info"]["name"] = sustainability_info.get("name", barcode_result["product_info"].get("name", "Unknown"))
+                        barcode_result["product_info"]["brand"] = sustainability_info.get("brand", barcode_result["product_info"].get("brand", "Unknown"))
+                        # Update category to be more specific for quiz logic
+                        if "snack" in sustainability_info.get("category", "").lower() or "sweet" in sustainability_info.get("category", "").lower() or "candy" in sustainability_info.get("category", "").lower():
+                            barcode_result["product_info"]["category"] = "Processed/Packaged"
+                        else:
+                            barcode_result["product_info"]["category"] = sustainability_info.get("category", barcode_result["product_info"].get("category", "Food"))
             
             return barcode_result
             

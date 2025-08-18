@@ -54,7 +54,11 @@ interface BarcodeResult {
 }
 
 interface BarcodeScannerProps {
-  onBarcodeDetected: (barcode: string, productInfo: any) => void;
+  onBarcodeDetected: (
+    barcode: string,
+    productInfo: any,
+    fullResult?: any
+  ) => void;
   onClose: () => void;
   productType?: string; // "food" or "clothing"
 }
@@ -167,10 +171,16 @@ export default function BarcodeScanner({
       });
 
       const result: BarcodeResult = await response.json();
+      console.log("BarcodeScanner received result:", result);
       setResult(result);
 
       if (result.success && result.barcode) {
-        onBarcodeDetected(result.barcode, result.product_info);
+        console.log("Calling onBarcodeDetected with:", {
+          barcode: result.barcode,
+          productInfo: result.product_info,
+          fullResult: result,
+        });
+        onBarcodeDetected(result.barcode, result.product_info, result);
       }
     } catch (error) {
       console.error("Error scanning barcode:", error);
