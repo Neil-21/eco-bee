@@ -5,8 +5,10 @@ import EnhancedQuiz from "./components/EnhancedQuiz";
 import EcoScoreDisplay from "./components/EcoScoreDisplay";
 import Leaderboard from "./components/Leaderboard";
 import SustainabilityChatbot from "./components/SustainabilityChatbot";
+import ChatbotInterface from "./components/ChatbotInterface";
 import UserInfoCollection from "./components/UserInfoCollection";
 import { QuizResponse } from "./types/quiz";
+import { BrandHeader, Bee, FeatureCard } from "./components/ui";
 import {
   FaLeaf,
   FaGlobe,
@@ -15,6 +17,8 @@ import {
   FaTrophy,
   FaComments,
   FaRobot,
+  FaBarcode,
+  FaCamera,
 } from "react-icons/fa";
 
 type AppState =
@@ -193,147 +197,129 @@ export default function Home() {
   };
 
   const renderWelcome = () => (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 flex items-center justify-center p-4">
-      <div className="max-w-2xl mx-auto bg-white shadow-2xl rounded-3xl overflow-hidden">
-        {/* Header */}
-        <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-8 text-center">
-          <div className="text-6xl mb-4">🐝</div>
-          <h1 className="text-4xl font-bold mb-2">EcoBee</h1>
-          <p className="text-green-100 text-lg">
-            Your Environmental Impact Snapshot
+    <main className="hero">
+      <BrandHeader />
+
+      {/* Main hero section */}
+      <section className="container hero-grid" aria-labelledby="headline">
+        <div>
+          <h1 id="headline" className="h1">
+            Make smarter everyday choices
+            <br />
+            with <span style={{ color: "#ffd54a" }}>EcoBee</span>
+          </h1>
+          <p className="sub">
+            Your AI-powered sustainability coach for quick, personalized tips
+            across food, mobility, and campus life. Scan products, take quizzes,
+            and get insights based on planetary boundaries.
+          </p>
+
+          {/* Main CTA */}
+          <button
+            onClick={() => setAppState("quiz")}
+            className="cta"
+            aria-label="Start the 5-minute sustainability snapshot"
+          >
+            Start 5-minute snapshot →
+          </button>
+
+          <p className="caption" style={{ marginTop: 12 }}>
+            Takes about five minutes. No guilt. Just smarter swaps.
           </p>
         </div>
 
-        {/* Content */}
-        <div className="p-8">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4">
-              Discover Your Impact on Planet Earth
-            </h2>
-            <p className="text-gray-600 text-lg leading-relaxed">
-              Take our quick 5-7 question quiz to understand how your daily
-              choices affect the planetary boundaries that keep Earth in a
-              stable, habitable state.
-            </p>
-          </div>
-
-          {/* Features */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="flex items-start space-x-3">
-              <FaLeaf className="text-green-500 text-2xl mt-1" />
-              <div>
-                <h3 className="font-semibold text-gray-800">
-                  Planetary Boundaries
-                </h3>
-                <p className="text-gray-600 text-sm">
-                  Get scored across climate, biosphere, water, and more
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start space-x-3">
-              <FaGlobe className="text-blue-500 text-2xl mt-1" />
-              <div>
-                <h3 className="font-semibold text-gray-800">Science-Based</h3>
-                <p className="text-gray-600 text-sm">
-                  Based on the latest environmental research
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start space-x-3">
-              <FaHeart className="text-red-500 text-2xl mt-1" />
-              <div>
-                <h3 className="font-semibold text-gray-800">Personal Action</h3>
-                <p className="text-gray-600 text-sm">
-                  Get tailored recommendations for positive impact
-                </p>
-              </div>
-            </div>
-            <div className="flex items-start space-x-3">
-              <FaUsers className="text-purple-500 text-2xl mt-1" />
-              <div>
-                <h3 className="font-semibold text-gray-800">Community</h3>
-                <p className="text-gray-600 text-sm">
-                  Compare your progress with others
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Call to Action */}
-          <div className="text-center">
-            <button
-              onClick={() => setAppState("quiz")}
-              className="bg-gradient-to-r from-green-500 to-blue-600 text-white font-bold py-4 px-8 rounded-xl text-lg hover:from-green-600 hover:to-blue-700 transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-105"
-            >
-              Start Your Environmental Snapshot
-            </button>
-            <p className="text-gray-500 text-sm mt-4">
-              Takes 3-5 minutes • Optional image capture • Privacy-focused
-            </p>
-          </div>
-
-          {/* Additional Features */}
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <h3 className="text-center text-lg font-semibold text-gray-800 mb-4">
-              Explore More EcoBee Features
-            </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Leaderboard Link */}
-              <button
-                onClick={() => setAppState("leaderboard")}
-                className="flex items-center justify-center space-x-3 p-4 bg-gradient-to-r from-yellow-100 to-orange-100 hover:from-yellow-200 hover:to-orange-200 rounded-xl border border-yellow-200 transition-all duration-200 hover:shadow-md"
-              >
-                <FaTrophy className="text-yellow-600 text-xl" />
-                <div className="text-left">
-                  <div className="font-semibold text-gray-800">
-                    EcoLeaderboard
-                  </div>
-                  <div className="text-sm text-gray-600">See how you rank</div>
-                </div>
-              </button>
-
-              {/* Sustainability Chatbot Link */}
-              <button
-                onClick={() => setAppState("chatbot")}
-                className="flex items-center justify-center space-x-3 p-4 bg-gradient-to-r from-blue-100 to-purple-100 hover:from-blue-200 hover:to-purple-200 rounded-xl border border-blue-200 transition-all duration-200 hover:shadow-md"
-              >
-                <FaRobot className="text-blue-600 text-xl" />
-                <div className="text-left">
-                  <div className="font-semibold text-gray-800">
-                    EcoChat Assistant
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    Get sustainability advice
-                  </div>
-                </div>
-              </button>
-            </div>
+        {/* Right side: Bee card */}
+        <div className="c4d-card bee-wrap" aria-hidden>
+          <div style={{ display: "grid", placeItems: "center" }}>
+            <Bee size={450} />
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+
+      {/* Feature grid */}
+      <section className="container" style={{ marginTop: 80 }}>
+        <h2
+          className="h1"
+          style={{
+            fontSize: "clamp(24px, 3vw, 36px)",
+            textAlign: "center",
+            marginBottom: 40,
+          }}
+        >
+          Explore EcoBee Features
+        </h2>
+
+        <div className="feature-grid">
+          <FeatureCard
+            icon={<FaLeaf />}
+            title="Sustainability Quiz"
+            description="Take our planetary boundaries quiz to understand your environmental impact across key Earth systems"
+            onClick={() => setAppState("quiz")}
+          />
+
+          <FeatureCard
+            icon={<FaBarcode />}
+            title="Product Scanner"
+            description="Scan barcodes to get instant sustainability insights and eco-friendly alternatives"
+            onClick={() => setAppState("quiz")}
+          />
+
+          <FeatureCard
+            icon={<FaCamera />}
+            title="Image Recognition"
+            description="Take photos of food or clothing items to get personalized environmental impact analysis"
+            onClick={() => setAppState("quiz")}
+          />
+
+          <FeatureCard
+            icon={<FaRobot />}
+            title="EcoChat Assistant"
+            description="Ask questions about sustainability and get personalized advice from our AI coach"
+            onClick={() => setAppState("chatbot")}
+          />
+
+          <FeatureCard
+            icon={<FaTrophy />}
+            title="EcoLeaderboard"
+            description="See how your sustainability efforts compare with other students on campus"
+            onClick={() => setAppState("leaderboard")}
+          />
+
+          <FeatureCard
+            icon={<FaGlobe />}
+            title="Planetary Boundaries"
+            description="Learn about the nine planetary boundaries that define a safe operating space for humanity"
+            onClick={() => setAppState("quiz")}
+          />
+        </div>
+      </section>
+    </main>
   );
 
   const renderQuiz = () => (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 p-4">
-      <EnhancedQuiz onComplete={handleQuizComplete} />
-    </div>
+    <main className="min-h-screen p-4 md:p-8">
+      <div className="max-w-4xl mx-auto">
+        <EnhancedQuiz onComplete={handleQuizComplete} />
+      </div>
+    </main>
   );
 
   const renderResults = () => (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-blue-50 to-purple-50 p-4">
-      {scoringResult && (
-        <EcoScoreDisplay
-          scoringResult={scoringResult}
-          onRestart={() => {
-            setAppState("welcome");
-            setQuizResponses([]);
-            setScoringResult(null);
-          }}
-          onNext={() => setAppState("leaderboard")}
-        />
-      )}
-    </div>
+    <main className="min-h-screen p-4 md:p-8">
+      <div className="max-w-4xl mx-auto">
+        {scoringResult && (
+          <EcoScoreDisplay
+            scoringResult={scoringResult}
+            onRestart={() => {
+              setAppState("welcome");
+              setQuizResponses([]);
+              setScoringResult(null);
+            }}
+            onNext={() => setAppState("leaderboard")}
+          />
+        )}
+      </div>
+    </main>
   );
 
   const handleUserInfoSubmit = async (userData: {
@@ -423,7 +409,13 @@ export default function Home() {
     case "leaderboard":
       return <Leaderboard onBack={() => setAppState("welcome")} />;
     case "chatbot":
-      return <SustainabilityChatbot onBack={() => setAppState("welcome")} />;
+      return (
+        <main className="min-h-screen p-4 md:p-8">
+          <div className="max-w-4xl mx-auto">
+            <ChatbotInterface onClose={() => setAppState("welcome")} />
+          </div>
+        </main>
+      );
     default:
       return renderWelcome();
   }

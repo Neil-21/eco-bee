@@ -23,6 +23,7 @@ import {
   validateQuizResponse,
 } from "../types/quiz";
 import BarcodeScanner from "./BarcodeScanner";
+import { Bee, Card } from "./ui";
 
 interface EnhancedQuizProps {
   onComplete: (responses: QuizResponse[], items: any[]) => void;
@@ -466,21 +467,28 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
   }
 
   return (
-    <div className="max-w-2xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden">
-      {/* Progress bar */}
-      <div className="bg-gray-100 px-6 py-4">
-        <div className="flex items-center justify-between mb-2">
-          <span className="text-sm font-medium text-gray-600">
-            Question {quizState.currentQuestionIndex + 1} of{" "}
-            {QUIZ_QUESTIONS.length}
-          </span>
-          <span className="text-sm font-medium text-gray-600">{progress}%</span>
+    <Card className="max-w-2xl mx-auto">
+      {/* Header with bee mascot */}
+      <div className="glass-header p-6 border-b border-white/10">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-3">
+            <Bee size={32} />
+            <h1 className="text-xl font-semibold text-white">EcoBee Quiz</h1>
+          </div>
+          <span className="text-sm text-white/70">{progress}% Complete</span>
         </div>
-        <div className="w-full bg-gray-200 rounded-full h-2">
+
+        {/* Progress bar */}
+        <div className="w-full bg-white/10 rounded-full h-2">
           <div
-            className="bg-green-500 h-2 rounded-full transition-all duration-300"
+            className="bg-gradient-to-r from-green-400 to-blue-400 h-2 rounded-full transition-all duration-300"
             style={{ width: `${progress}%` }}
           />
+        </div>
+
+        <div className="mt-2 text-sm text-white/60">
+          Question {quizState.currentQuestionIndex + 1} of{" "}
+          {QUIZ_QUESTIONS.length}
         </div>
       </div>
 
@@ -488,21 +496,21 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
       <div className="p-8">
         <div className="flex items-center space-x-3 mb-6">
           {getCategoryIcon(currentQuestion.category)}
-          <h2 className="text-xl font-bold text-gray-800">
+          <h2 className="text-xl font-bold text-white">
             {currentQuestion.text}
           </h2>
         </div>
 
         {/* Scanned Product Display */}
         {scannedProduct && (
-          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+          <div className="mb-6 p-4 glass-card-inner border border-green-400/30 rounded-lg">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-lg font-semibold text-green-800">
+              <h3 className="text-lg font-semibold text-green-300">
                 ✅ Scanned: {scannedProduct.name}
               </h3>
               <button
                 onClick={() => setScannedProduct(null)}
-                className="text-green-600 hover:text-green-800"
+                className="text-green-300 hover:text-green-100 transition-colors"
               >
                 ✕
               </button>
@@ -511,14 +519,14 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
             {/* Brand and Category */}
             <div className="grid grid-cols-2 gap-4 text-sm mb-3">
               <div>
-                <span className="font-medium text-green-700">Brand:</span>
-                <div className="text-green-600">
+                <span className="font-medium text-green-200">Brand:</span>
+                <div className="text-green-300">
                   {scannedProduct.sustainability?.brand || "Unknown"}
                 </div>
               </div>
               <div>
-                <span className="font-medium text-green-700">Category:</span>
-                <div className="text-green-600">{scannedProduct.category}</div>
+                <span className="font-medium text-green-200">Category:</span>
+                <div className="text-green-300">{scannedProduct.category}</div>
               </div>
             </div>
 
@@ -691,6 +699,6 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
           </div>
         </div>
       )}
-    </div>
+    </Card>
   );
 }
