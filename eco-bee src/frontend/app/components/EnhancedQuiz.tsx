@@ -126,7 +126,12 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
     if (quizState.isComplete) {
       onComplete(quizState.responses, quizState.capturedItems);
     }
-  }, [quizState.isComplete, quizState.responses, quizState.capturedItems, onComplete]);
+  }, [
+    quizState.isComplete,
+    quizState.responses,
+    quizState.capturedItems,
+    onComplete,
+  ]);
 
   const handlePrevious = useCallback(() => {
     if (quizState.currentQuestionIndex > 0) {
