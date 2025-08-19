@@ -1,15 +1,39 @@
-'use client';
-import React from 'react';
+"use client";
+import React from "react";
 
 // Bee component with glowing antennae
 export function Bee({ size = 140 }: { size?: number }) {
   return (
     <div className="relative inline-block">
-      <div 
-        className="rounded-[28%] object-contain bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-6xl"
-        style={{ width: size, height: size }}
+      <div
+        className="rounded-[28%] bg-gradient-to-br from-yellow-400 to-yellow-600 overflow-hidden"
+        style={{
+          width: size,
+          height: size,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "8px",
+        }}
       >
-        🐝
+        <img
+          src="/THE eco-bee.png"
+          alt="EcoBee"
+          style={{
+            maxWidth: "100%",
+            maxHeight: "100%",
+            objectFit: "contain",
+          }}
+          onError={(e) => {
+            console.log("Image failed to load, showing fallback");
+            e.currentTarget.style.display = "none";
+            const fallback = document.createElement("div");
+            fallback.innerHTML = "🐝";
+            fallback.style.fontSize = "48px";
+            e.currentTarget.parentElement?.appendChild(fallback);
+          }}
+          onLoad={() => console.log("Image loaded successfully")}
+        />
       </div>
       {/* Antennae glow */}
       <span className="pointer-events-none absolute -top-2 left-1/3 h-5 w-5 rounded-full bg-yellow-400/70 blur-[6px]" />
@@ -19,7 +43,11 @@ export function Bee({ size = 140 }: { size?: number }) {
 }
 
 // Glass card component
-export function Card({ className = '', children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+export function Card({
+  className = "",
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={`glass ${className}`} {...props}>
       {children}
@@ -28,20 +56,24 @@ export function Card({ className = '', children, ...props }: React.HTMLAttribute
 }
 
 // Enhanced button component
-export function Button(
-  { children, className = '', variant = 'default', ...props }:
-  React.ButtonHTMLAttributes<HTMLButtonElement> & { 
-    variant?: 'default' | 'primary' | 'ghost';
-  }
-) {
+export function Button({
+  children,
+  className = "",
+  variant = "default",
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: "default" | "primary" | "ghost";
+}) {
   const baseClass = "btn";
-  const variantClass = variant === 'primary' ? 'btn-primary' : variant === 'ghost' ? 'btn-ghost' : '';
-  
+  const variantClass =
+    variant === "primary"
+      ? "btn-primary"
+      : variant === "ghost"
+      ? "btn-ghost"
+      : "";
+
   return (
-    <button
-      className={`${baseClass} ${variantClass} ${className}`}
-      {...props}
-    >
+    <button className={`${baseClass} ${variantClass} ${className}`} {...props}>
       {children}
     </button>
   );
@@ -49,16 +81,20 @@ export function Button(
 
 // Section title component
 export function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-lg font-semibold tracking-tight text-neutral-200 mb-4">{children}</h2>;
+  return (
+    <h2 className="text-lg font-semibold tracking-tight text-neutral-200 mb-4">
+      {children}
+    </h2>
+  );
 }
 
 // Feature card component for dashboard
-export function FeatureCard({ 
-  icon, 
-  title, 
-  description, 
+export function FeatureCard({
+  icon,
+  title,
+  description,
   onClick,
-  className = ""
+  className = "",
 }: {
   icon: React.ReactNode;
   title: string;
@@ -68,9 +104,7 @@ export function FeatureCard({
 }) {
   return (
     <div className={`feature-card ${className}`} onClick={onClick}>
-      <div className="feature-icon">
-        {icon}
-      </div>
+      <div className="feature-icon">{icon}</div>
       <div className="feature-title">{title}</div>
       <div className="feature-description">{description}</div>
     </div>
@@ -78,17 +112,17 @@ export function FeatureCard({
 }
 
 // Progress bar component
-export function ProgressBar({ 
-  progress, 
-  className = "" 
-}: { 
-  progress: number; 
-  className?: string; 
+export function ProgressBar({
+  progress,
+  className = "",
+}: {
+  progress: number;
+  className?: string;
 }) {
   return (
     <div className={`quiz-progress ${className}`}>
-      <div 
-        className="quiz-progress-bar" 
+      <div
+        className="quiz-progress-bar"
         style={{ width: `${Math.max(0, Math.min(100, progress))}%` }}
       />
     </div>
@@ -96,9 +130,15 @@ export function ProgressBar({
 }
 
 // Loading spinner
-export function Spinner({ size = 24, className = "" }: { size?: number; className?: string }) {
+export function Spinner({
+  size = 24,
+  className = "",
+}: {
+  size?: number;
+  className?: string;
+}) {
   return (
-    <div 
+    <div
       className={`spinner ${className}`}
       style={{ width: size, height: size }}
     />
@@ -121,44 +161,42 @@ export function BrandHeader() {
 }
 
 // Chat message component
-export function ChatMessage({ 
-  type, 
-  content, 
-  avatar 
-}: { 
-  type: 'user' | 'bot' | 'system'; 
-  content: string; 
+export function ChatMessage({
+  type,
+  content,
+  avatar,
+}: {
+  type: "user" | "bot" | "system";
+  content: string;
   avatar?: string;
 }) {
   return (
     <div className={`chat-message ${type}`}>
       <div className="chat-avatar">
-        {type === 'bot' ? '🐝' : type === 'user' ? '👤' : '💡'}
+        {type === "bot" ? "🐝" : type === "user" ? "👤" : "💡"}
       </div>
-      <div className="chat-content">
-        {content}
-      </div>
+      <div className="chat-content">{content}</div>
     </div>
   );
 }
 
 // Chat input component
-export function ChatInput({ 
-  onSend, 
+export function ChatInput({
+  onSend,
   disabled = false,
-  placeholder = "Type your message..."
+  placeholder = "Type your message...",
 }: {
   onSend: (message: string) => void;
   disabled?: boolean;
   placeholder?: string;
 }) {
-  const [message, setMessage] = React.useState('');
+  const [message, setMessage] = React.useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (message.trim() && !disabled) {
       onSend(message.trim());
-      setMessage('');
+      setMessage("");
     }
   };
 
@@ -171,7 +209,11 @@ export function ChatInput({
         placeholder={placeholder}
         disabled={disabled}
       />
-      <Button type="submit" variant="primary" disabled={!message.trim() || disabled}>
+      <Button
+        type="submit"
+        variant="primary"
+        disabled={!message.trim() || disabled}
+      >
         Send
       </Button>
     </form>
