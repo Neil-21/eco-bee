@@ -672,9 +672,13 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
 
           <button
             onClick={handleNext}
-            disabled={!currentAnswer && currentQuestion.required}
+            disabled={!currentAnswer || 
+                     (Array.isArray(currentAnswer) && currentAnswer.length === 0) ||
+                     (typeof currentAnswer === 'string' && currentAnswer.trim() === '')}
             className={`flex items-center space-x-2 px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-              !currentAnswer && currentQuestion.required
+              !currentAnswer || 
+              (Array.isArray(currentAnswer) && currentAnswer.length === 0) ||
+              (typeof currentAnswer === 'string' && currentAnswer.trim() === '')
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                 : "bg-green-600 text-white hover:bg-green-700"
             }`}

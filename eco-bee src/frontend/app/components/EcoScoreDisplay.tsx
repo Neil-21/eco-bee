@@ -121,7 +121,7 @@ export default function EcoScoreDisplay({
   }));
 
   const createRadialScore = (score: number) => {
-    const circumference = 2 * Math.PI * 45; // radius of 45
+    const circumference = 2 * Math.PI * 20; // radius of 20 to match the circle
     const strokeDasharray = circumference;
     const strokeDashoffset = circumference - (score / 100) * circumference;
 
@@ -147,30 +147,30 @@ export default function EcoScoreDisplay({
   return (
     <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-8 text-center">
-        <FaTrophy className="mx-auto text-4xl mb-4 opacity-90" />
-        <h1 className="text-3xl font-bold mb-2">Your EcoBee Score</h1>
-        <p className="text-green-100">Environmental Impact Assessment</p>
+      <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-4 text-center">
+        <FaTrophy className="mx-auto text-3xl mb-2 opacity-90" />
+        <h1 className="text-2xl font-bold mb-1">Your EcoBee Score</h1>
+        <p className="text-green-100 text-sm">Environmental Impact Assessment</p>
       </div>
 
       {/* Main Score */}
-      <div className="p-8 text-center border-b border-gray-200">
-        <div className="relative inline-block mb-6">
-          <svg className="w-48 h-48 transform -rotate-90" viewBox="0 0 100 100">
+      <div className="p-4 text-center border-b border-gray-200">
+        <div className="relative inline-block mb-4">
+          <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
             {/* Background circle */}
             <circle
               cx="50"
               cy="50"
-              r="45"
+              r="20"
               stroke="#e5e7eb"
-              strokeWidth="8"
+              strokeWidth="3"
               fill="none"
             />
             {/* Score circle */}
             <circle
               cx="50"
               cy="50"
-              r="45"
+              r="20"
               stroke={
                 scoringResult.composite <= 30
                   ? "#10b981"
@@ -178,7 +178,7 @@ export default function EcoScoreDisplay({
                   ? "#f59e0b"
                   : "#ef4444"
               }
-              strokeWidth="8"
+              strokeWidth="3"
               fill="none"
               strokeLinecap="round"
               style={createRadialScore(100 - scoringResult.composite)} // Invert for better display
@@ -186,14 +186,14 @@ export default function EcoScoreDisplay({
           </svg>
           <div className="absolute inset-0 flex items-center justify-center flex-col">
             <div
-              className={`text-4xl font-bold ${getScoreColor(
+              className={`text-lg font-bold ${getScoreColor(
                 scoringResult.composite
               )}`}
             >
               {Math.round(100 - scoringResult.composite)}/100
             </div>
             <div
-              className={`text-2xl font-bold px-3 py-1 rounded-full ${getGradeColor(
+              className={`text-sm font-bold px-2 py-1 rounded-full ${getGradeColor(
                 scoringResult.grade
               )}`}
             >
@@ -202,7 +202,7 @@ export default function EcoScoreDisplay({
           </div>
         </div>
 
-        <p className="text-lg text-gray-600 max-w-md mx-auto">
+        <p className="text-base text-gray-600 max-w-md mx-auto">
           {scoringResult.composite <= 30
             ? "Excellent! You're living within planetary boundaries."
             : scoringResult.composite <= 60
@@ -212,25 +212,25 @@ export default function EcoScoreDisplay({
       </div>
 
       {/* Boundary Breakdown */}
-      <div className="p-8 border-b border-gray-200">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-          <FaGlobe className="mr-3 text-blue-600" />
+      <div className="p-4 border-b border-gray-200">
+        <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+          <FaGlobe className="mr-2 text-blue-600" />
           Planetary Boundary Breakdown
         </h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {boundaryScores.map(({ key, value, icon: Icon, color, bg, name }) => (
-            <div key={key} className={`p-4 rounded-xl ${bg} border`}>
-              <div className="flex items-center justify-between mb-2">
-                <Icon className={`text-2xl ${color}`} />
-                <span className={`text-2xl font-bold ${getScoreColor(value)}`}>
+            <div key={key} className={`p-3 rounded-xl ${bg} border`}>
+              <div className="flex items-center justify-between mb-1">
+                <Icon className={`text-xl ${color}`} />
+                <span className={`text-xl font-bold ${getScoreColor(value)}`}>
                   {Math.round(100 - value)}
                 </span>
               </div>
-              <h3 className="font-semibold text-gray-800 text-sm">{name}</h3>
-              <div className="mt-2 bg-gray-200 rounded-full h-2">
+              <h3 className="font-semibold text-gray-800 text-xs">{name}</h3>
+              <div className="mt-1 bg-gray-200 rounded-full h-1.5">
                 <div
-                  className={`h-2 rounded-full ${
+                  className={`h-1.5 rounded-full ${
                     value <= 30
                       ? "bg-green-500"
                       : value <= 60
@@ -248,32 +248,32 @@ export default function EcoScoreDisplay({
       {/* Recommendations */}
       {scoringResult.recommendations &&
         scoringResult.recommendations.length > 0 && (
-          <div className="p-8 border-b border-gray-200">
-            <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-              <FaLightbulb className="mr-3 text-yellow-500" />
+          <div className="p-4 border-b border-gray-200">
+            <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+              <FaLightbulb className="mr-2 text-yellow-500" />
               Your Top Improvement Actions
             </h2>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {scoringResult.recommendations.slice(0, 3).map((rec, index) => (
                 <div
                   key={index}
-                  className="bg-gradient-to-r from-blue-50 to-green-50 border border-blue-200 rounded-xl p-6"
+                  className="bg-gradient-to-r from-blue-50 to-green-50 border border-blue-200 rounded-xl p-4"
                 >
-                  <div className="flex items-start space-x-4">
-                    <div className="bg-blue-100 text-blue-600 rounded-full w-8 h-8 flex items-center justify-center font-bold">
+                  <div className="flex items-start space-x-3">
+                    <div className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center font-bold text-sm">
                       {index + 1}
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-bold text-gray-800 text-lg mb-2">
+                      <h3 className="font-bold text-gray-800 text-base mb-1">
                         {rec.action}
                       </h3>
-                      <p className="text-gray-600 mb-2">{rec.impact}</p>
+                      <p className="text-gray-600 mb-1 text-sm">{rec.impact}</p>
                       <div className="flex items-center space-x-2">
-                        <span className="text-sm text-blue-600 bg-blue-100 px-2 py-1 rounded-full">
+                        <span className="text-xs text-blue-600 bg-blue-100 px-2 py-0.5 rounded-full">
                           {rec.boundary}
                         </span>
-                        <span className="text-sm text-gray-500">
+                        <span className="text-xs text-gray-500">
                           Current score: {Math.round(100 - rec.current_score)}
                           /100
                         </span>
@@ -287,11 +287,11 @@ export default function EcoScoreDisplay({
         )}
 
       {/* Action Buttons */}
-      <div className="p-8 bg-gray-50">
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      <div className="p-4 bg-gray-50">
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={handleShare}
-            className="flex items-center justify-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
           >
             <FaShareAlt />
             <span>Share Results</span>
@@ -299,7 +299,7 @@ export default function EcoScoreDisplay({
 
           <button
             onClick={onRestart}
-            className="flex items-center justify-center space-x-2 px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors"
+            className="flex items-center justify-center space-x-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm"
           >
             <FaArrowLeft />
             <span>Take Again</span>
@@ -308,7 +308,7 @@ export default function EcoScoreDisplay({
           {onGetTips && (
             <button
               onClick={onGetTips}
-              className="flex items-center justify-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex items-center justify-center space-x-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
             >
               <FaComments />
               <span>Get Personalized Tips</span>
@@ -318,7 +318,7 @@ export default function EcoScoreDisplay({
           {onNext && (
             <button
               onClick={onNext}
-              className="flex items-center justify-center space-x-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+              className="flex items-center justify-center space-x-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm"
             >
               <span>View Leaderboard</span>
               <FaArrowRight />
@@ -326,8 +326,8 @@ export default function EcoScoreDisplay({
           )}
         </div>
 
-        <div className="text-center mt-6">
-          <p className="text-sm text-gray-500">
+        <div className="text-center mt-3">
+          <p className="text-xs text-gray-500">
             Want to improve your score? Check back regularly and track your
             progress!
           </p>
