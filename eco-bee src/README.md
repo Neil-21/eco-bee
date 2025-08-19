@@ -12,7 +12,7 @@ demo for Intake &amp; Perception
 
 # Instructions for windows
 1. Install python libraries
-- cd backend; pip install -r .\requirements.txt; py -3 .\simple_server.py
+- cd backend; pip install -r .\requirements.txt; py -3 .\app.py
 - python 
 2. Initialize npm
 - cd frontend; npm install; npm run dev
