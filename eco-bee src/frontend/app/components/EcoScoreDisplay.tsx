@@ -12,6 +12,7 @@ import {
   FaTrophy,
   FaLightbulb,
   FaShareAlt,
+  FaComments,
 } from "react-icons/fa";
 
 interface BoundaryScore {
@@ -42,6 +43,7 @@ interface EcoScoreDisplayProps {
   scoringResult: ScoringResult;
   onRestart: () => void;
   onNext?: () => void;
+  onGetTips?: () => void;
 }
 
 const BOUNDARY_ICONS = {
@@ -106,6 +108,7 @@ export default function EcoScoreDisplay({
   scoringResult,
   onRestart,
   onNext,
+  onGetTips,
 }: EcoScoreDisplayProps) {
   const router = useRouter();
 
@@ -301,6 +304,16 @@ export default function EcoScoreDisplay({
             <FaArrowLeft />
             <span>Take Again</span>
           </button>
+
+          {onGetTips && (
+            <button
+              onClick={onGetTips}
+              className="flex items-center justify-center space-x-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              <FaComments />
+              <span>Get Personalized Tips</span>
+            </button>
+          )}
 
           {onNext && (
             <button

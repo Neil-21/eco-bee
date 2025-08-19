@@ -316,6 +316,7 @@ export default function Home() {
               setScoringResult(null);
             }}
             onNext={() => setAppState("leaderboard")}
+            onGetTips={() => setAppState("chatbot")}
           />
         )}
       </div>
@@ -412,7 +413,11 @@ export default function Home() {
       return (
         <main className="min-h-screen p-4 md:p-8">
           <div className="max-w-4xl mx-auto">
-            <ChatbotInterface onClose={() => setAppState("welcome")} />
+            <ChatbotInterface
+              onClose={() => setAppState("welcome")}
+              quizResponses={quizResponses}
+              scoringResult={scoringResult}
+            />
           </div>
         </main>
       );
