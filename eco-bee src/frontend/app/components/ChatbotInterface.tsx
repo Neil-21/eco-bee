@@ -418,18 +418,10 @@ Would you like specific tips to improve your ${lowestBoundary[0]} score?`;
               <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-400 to-teal-400 flex items-center justify-center text-sm">
                 <FaLeaf />
               </div>
-              <div className="glass-card-inner border border-green-400/30 px-4 py-2 rounded-lg">
-                <div className="flex space-x-1">
-                  <div className="w-2 h-2 bg-green-400 rounded-full animate-bounce"></div>
-                  <div
-                    className="w-2 h-2 bg-green-400 rounded-full animate-bounce"
-                    style={{ animationDelay: "0.1s" }}
-                  ></div>
-                  <div
-                    className="w-2 h-2 bg-green-400 rounded-full animate-bounce"
-                    style={{ animationDelay: "0.2s" }}
-                  ></div>
-                </div>
+              <div className="typing-indicator">
+                <div className="dot" />
+                <div className="dot delay-1" />
+                <div className="dot delay-2" />
               </div>
             </div>
           </div>
@@ -452,7 +444,8 @@ Would you like specific tips to improve your ${lowestBoundary[0]} score?`;
           <button
             onClick={() => handleSendMessage(inputText)}
             disabled={!inputText.trim() || isTyping}
-            className="px-4 py-2 bg-gradient-to-r from-green-400 to-teal-400 text-white rounded-lg hover:from-green-500 hover:to-teal-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center space-x-1"
+            className="send-button"
+            title="Send message"
           >
             <FaPaperPlane />
           </button>
