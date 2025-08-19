@@ -102,16 +102,23 @@ What area would you like to focus on first?`;
         const grade = scoringResult.grade;
         const recommendations = scoringResult.recommendations || [];
         const boundaryScores = scoringResult.per_boundary_averages;
-        
+
         // Find the lowest-scoring boundary for targeted advice
         const lowestBoundary = Object.entries(boundaryScores).reduce((a, b) =>
           boundaryScores[a[0]] > boundaryScores[b[0]] ? b : a
         );
-        
+
         context = `sustainability - User Profile: Score ${score}/100 (Grade: ${grade}), 
-        Lowest scoring area: ${lowestBoundary[0]} (${Math.round(100 - (lowestBoundary[1] as number))}/100), 
+        Lowest scoring area: ${lowestBoundary[0]} (${Math.round(
+          100 - (lowestBoundary[1] as number)
+        )}/100), 
         Top recommendation: ${recommendations[0]?.action || "Not available"},
-        Quiz responses: ${JSON.stringify(quizResponses.map(r => ({ question: r.question_text, answer: r.answer })))}`;
+        Quiz responses: ${JSON.stringify(
+          quizResponses.map((r) => ({
+            question: r.question_text,
+            answer: r.answer,
+          }))
+        )}`;
       }
 
       // Call backend Mistral API
@@ -131,10 +138,12 @@ What area would you like to focus on first?`;
       }
 
       const result = await response.json();
-      
+
       const botMessage: Message = {
         id: `bot-${Date.now()}`,
-        text: result.response || "I'm sorry, I couldn't generate a response right now.",
+        text:
+          result.response ||
+          "I'm sorry, I couldn't generate a response right now.",
         isUser: false,
         timestamp: new Date(),
       };
@@ -142,7 +151,7 @@ What area would you like to focus on first?`;
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
       console.error("Error calling chat API:", error);
-      
+
       // Fallback to local response if API fails
       const fallbackResponse = generateFallbackResponse(text.trim());
       const botMessage: Message = {
