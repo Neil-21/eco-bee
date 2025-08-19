@@ -228,11 +228,15 @@ export const validateQuizResponse = (
   question: QuizQuestion,
   answer: any
 ): string | null => {
+  // Always require an answer for any question
   if (
-    question.required &&
-    (!answer || (Array.isArray(answer) && answer.length === 0))
+    !answer ||
+    (Array.isArray(answer) && answer.length === 0) ||
+    (typeof answer === "string" && answer.trim() === "") ||
+    answer === null ||
+    answer === undefined
   ) {
-    return "This question is required";
+    return "Please select an answer or enter text to continue";
   }
 
   if (question.validation) {
