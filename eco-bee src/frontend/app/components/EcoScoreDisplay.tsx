@@ -181,10 +181,13 @@ export default function EcoScoreDisplay({
               strokeWidth="8"
               fill="none"
               strokeLinecap="round"
-              style={createRadialScore(100 - scoringResult.composite)} // Invert for better display
+              style={{
+                ...createRadialScore(100 - scoringResult.composite),
+                transition: "stroke-dashoffset 1s ease-out",
+              }}
             />
           </svg>
-          <div className="absolute inset-0 flex items-center justify-center flex-col">
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
             <div
               className={`text-4xl font-bold ${getScoreColor(
                 scoringResult.composite
