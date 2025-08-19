@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   FaLeaf,
@@ -106,7 +106,7 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
 
       if (isComplete) {
         // Quiz completed
-        onComplete(newResponses, prev.capturedItems);
+        // onComplete will be called in useEffect
         return { ...prev, responses: newResponses, isComplete: true };
       }
 
@@ -120,6 +120,13 @@ export default function EnhancedQuiz({ onComplete }: EnhancedQuizProps) {
     // Reset current answer for next question
     setCurrentAnswer(null);
   }, [currentQuestion, currentAnswer, onComplete]);
+
+  // Call onComplete only after render, when isComplete becomes true
+  useEffect(() => {
+    if (quizState.isComplete) {
+      onComplete(quizState.responses, quizState.capturedItems);
+    }
+  }, [quizState.isComplete, quizState.responses, quizState.capturedItems, onComplete]);
 
   const handlePrevious = useCallback(() => {
     if (quizState.currentQuestionIndex > 0) {
