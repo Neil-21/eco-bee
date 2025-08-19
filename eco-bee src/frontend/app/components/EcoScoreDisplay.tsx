@@ -121,7 +121,7 @@ export default function EcoScoreDisplay({
   }));
 
   const createRadialScore = (score: number) => {
-    const circumference = 2 * Math.PI * 20; // radius of 20 to match the circle
+    const circumference = 2 * Math.PI * 35; // radius of 35 to match the circle
     const strokeDasharray = circumference;
     const strokeDashoffset = circumference - (score / 100) * circumference;
 
@@ -144,33 +144,42 @@ export default function EcoScoreDisplay({
     }
   };
 
-  return (
-    <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-4 text-center">
-        <FaTrophy className="mx-auto text-3xl mb-2 opacity-90" />
-        <h1 className="text-2xl font-bold mb-1">Your EcoBee Score</h1>
-        <p className="text-green-100 text-sm">Environmental Impact Assessment</p>
-      </div>
+  // Get progress bar width class
+  const getProgressBarClass = (value: number) => {
+    const width = Math.max(5, 100 - value);
+    if (width >= 90) return "w-full";
+    if (width >= 80) return "w-5/6";
+    if (width >= 75) return "w-3/4";
+    if (width >= 60) return "w-3/5";
+    if (width >= 50) return "w-1/2";
+    if (width >= 40) return "w-2/5";
+    if (width >= 33) return "w-1/3";
+    if (width >= 25) return "w-1/4";
+    if (width >= 20) return "w-1/5";
+    if (width >= 16) return "w-1/6";
+    return "w-1/12";
+  };
 
-      {/* Main Score */}
-      <div className="p-4 text-center border-b border-gray-200">
-        <div className="relative inline-block mb-4">
-          <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
+  return (
+    <div className="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl overflow-hidden relative">
+      {/* Fixed Floating Score Circle - Top Right */}
+      <div className="fixed top-4 right-4 z-50 bg-white rounded-full shadow-lg p-2">
+        <div className="relative">
+          <svg className="w-20 h-20 transform -rotate-90" viewBox="0 0 100 100">
             {/* Background circle */}
             <circle
               cx="50"
               cy="50"
-              r="20"
+              r="35"
               stroke="#e5e7eb"
-              strokeWidth="3"
+              strokeWidth="6"
               fill="none"
             />
             {/* Score circle */}
             <circle
               cx="50"
               cy="50"
-              r="20"
+              r="35"
               stroke={
                 scoringResult.composite <= 30
                   ? "#10b981"
@@ -178,22 +187,29 @@ export default function EcoScoreDisplay({
                   ? "#f59e0b"
                   : "#ef4444"
               }
-              strokeWidth="3"
+              strokeWidth="6"
               fill="none"
               strokeLinecap="round"
-              style={createRadialScore(100 - scoringResult.composite)} // Invert for better display
+              strokeDasharray={
+                createRadialScore(100 - scoringResult.composite).strokeDasharray
+              }
+              strokeDashoffset={
+                createRadialScore(100 - scoringResult.composite)
+                  .strokeDashoffset
+              }
+              className="transition-all duration-1000"
             />
           </svg>
           <div className="absolute inset-0 flex items-center justify-center flex-col">
             <div
-              className={`text-lg font-bold ${getScoreColor(
+              className={`text-sm font-bold ${getScoreColor(
                 scoringResult.composite
               )}`}
             >
-              {Math.round(100 - scoringResult.composite)}/100
+              {Math.round(100 - scoringResult.composite)}
             </div>
             <div
-              className={`text-sm font-bold px-2 py-1 rounded-full ${getGradeColor(
+              className={`text-xs font-bold px-1 py-0.5 rounded-full ${getGradeColor(
                 scoringResult.grade
               )}`}
             >
@@ -201,19 +217,20 @@ export default function EcoScoreDisplay({
             </div>
           </div>
         </div>
+      </div>
 
-        <p className="text-base text-gray-600 max-w-md mx-auto">
-          {scoringResult.composite <= 30
-            ? "Excellent! You're living within planetary boundaries."
-            : scoringResult.composite <= 60
-            ? "Good progress! There's room for improvement."
-            : "Your lifestyle has significant environmental impact. Let's make some changes!"}
+      {/* Header */}
+      <div className="bg-gradient-to-r from-green-500 to-blue-600 text-white p-4 text-center">
+        <FaTrophy className="mx-auto text-3xl mb-2 opacity-90" />
+        <h1 className="text-2xl font-bold mb-1">Your EcoBee Score</h1>
+        <p className="text-green-100 text-sm">
+          Environmental Impact Assessment
         </p>
       </div>
 
       {/* Boundary Breakdown */}
-      <div className="p-4 border-b border-gray-200">
-        <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+      <div className="py-2 px-3 border-b border-gray-200">
+        <h2 className="text-lg font-bold text-gray-800 mb-2 flex items-center">
           <FaGlobe className="mr-2 text-blue-600" />
           Planetary Boundary Breakdown
         </h2>
@@ -228,16 +245,15 @@ export default function EcoScoreDisplay({
                 </span>
               </div>
               <h3 className="font-semibold text-gray-800 text-xs">{name}</h3>
-              <div className="mt-1 bg-gray-200 rounded-full h-1.5">
+              <div className="mt-1 bg-gray-200 rounded-full h-1.5 overflow-hidden">
                 <div
-                  className={`h-1.5 rounded-full ${
+                  className={`h-1.5 rounded-full transition-all duration-500 ${
                     value <= 30
                       ? "bg-green-500"
                       : value <= 60
                       ? "bg-yellow-500"
                       : "bg-red-500"
-                  }`}
-                  style={{ width: `${Math.max(5, 100 - value)}%` }}
+                  } ${getProgressBarClass(value)}`}
                 />
               </div>
             </div>
@@ -248,17 +264,17 @@ export default function EcoScoreDisplay({
       {/* Recommendations */}
       {scoringResult.recommendations &&
         scoringResult.recommendations.length > 0 && (
-          <div className="p-4 border-b border-gray-200">
-            <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+          <div className="py-2 px-3 border-b border-gray-200">
+            <h2 className="text-lg font-bold text-gray-800 mb-2 flex items-center">
               <FaLightbulb className="mr-2 text-yellow-500" />
               Your Top Improvement Actions
             </h2>
 
-            <div className="space-y-3">
+            <div className="space-y-2">
               {scoringResult.recommendations.slice(0, 3).map((rec, index) => (
                 <div
                   key={index}
-                  className="bg-gradient-to-r from-blue-50 to-green-50 border border-blue-200 rounded-xl p-4"
+                  className="bg-gradient-to-r from-blue-50 to-green-50 border border-blue-200 rounded-xl p-3"
                 >
                   <div className="flex items-start space-x-3">
                     <div className="bg-blue-100 text-blue-600 rounded-full w-6 h-6 flex items-center justify-center font-bold text-sm">
@@ -287,7 +303,7 @@ export default function EcoScoreDisplay({
         )}
 
       {/* Action Buttons */}
-      <div className="p-4 bg-gray-50">
+      <div className="py-2 px-3 bg-gray-50">
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             onClick={handleShare}
