@@ -749,9 +749,122 @@ def save_factor_tables_to_csv(tables: Dict, csv_directory: str):
         except Exception as e:
             print(f"Error saving factor table {table_name}: {e}")
 
+def calculate_ecoscore_from_quiz_responses(quiz_responses: List) -> Dict:
+    """
+    Calculate EcoScore based on quiz responses when no items are scanned
+    
+    Args:
+        quiz_responses: List of QuizResponse objects from the quiz
+    
+    Returns:
+        Comprehensive scoring result based on quiz answers
+    """
+    # Initialize boundary scores
+    boundary_scores = {boundary: 50.0 for boundary in PLANETARY_BOUNDARIES.keys()}
+    
+    # Convert quiz responses to a more workable format
+    responses_dict = {}
+    for response in quiz_responses:
+        responses_dict[response.question_id] = response.answer
+    
+    # Calculate scores based on quiz responses
+    # Food choices impact
+    if "food_today" in responses_dict:
+        food_choice = responses_dict["food_today"]
+        if food_choice == "plant-based":
+            boundary_scores["climate"] = max(15, boundary_scores["climate"] - 30)
+            boundary_scores["biosphere"] = max(20, boundary_scores["biosphere"] - 25)
+            boundary_scores["biogeochemical"] = max(25, boundary_scores["biogeochemical"] - 20)
+        elif food_choice == "mixed":
+            boundary_scores["climate"] = max(25, boundary_scores["climate"] - 15)
+            boundary_scores["biosphere"] = max(30, boundary_scores["biosphere"] - 10)
+        elif food_choice == "meat-heavy":
+            boundary_scores["climate"] = min(85, boundary_scores["climate"] + 25)
+            boundary_scores["biosphere"] = min(80, boundary_scores["biosphere"] + 20)
+            boundary_scores["biogeochemical"] = min(85, boundary_scores["biogeochemical"] + 25)
+        elif food_choice == "packaged":
+            boundary_scores["climate"] = min(75, boundary_scores["climate"] + 15)
+            boundary_scores["aerosols"] = min(75, boundary_scores["aerosols"] + 20)
+    
+    # Transport choices impact
+    if "transport_today" in responses_dict:
+        transport = responses_dict["transport_today"]
+        if transport in ["walk", "bike"]:
+            boundary_scores["climate"] = max(10, boundary_scores["climate"] - 35)
+            boundary_scores["aerosols"] = max(15, boundary_scores["aerosols"] - 30)
+        elif transport == "public":
+            boundary_scores["climate"] = max(25, boundary_scores["climate"] - 15)
+            boundary_scores["aerosols"] = max(30, boundary_scores["aerosols"] - 15)
+        elif transport == "electric":
+            boundary_scores["climate"] = max(30, boundary_scores["climate"] - 10)
+        elif transport == "car":
+            boundary_scores["climate"] = min(85, boundary_scores["climate"] + 30)
+            boundary_scores["aerosols"] = min(80, boundary_scores["aerosols"] + 25)
+    
+    # Distance traveled impact
+    if "distance_traveled" in responses_dict:
+        distance = responses_dict["distance_traveled"]
+        if distance == "under_5km":
+            # Minimal additional impact
+            pass
+        elif distance == "5_20km":
+            boundary_scores["climate"] = min(80, boundary_scores["climate"] + 10)
+        elif distance == "20_50km":
+            boundary_scores["climate"] = min(85, boundary_scores["climate"] + 20)
+        elif distance == "over_50km":
+            boundary_scores["climate"] = min(90, boundary_scores["climate"] + 30)
+    
+    # Water usage consciousness
+    if "water_usage" in responses_dict:
+        try:
+            water_rating = int(responses_dict["water_usage"])
+            # Scale from 1 (very conscious) to 5 (not conscious)
+            if water_rating <= 2:
+                boundary_scores["freshwater"] = max(20, boundary_scores["freshwater"] - 25)
+            elif water_rating == 3:
+                boundary_scores["freshwater"] = max(35, boundary_scores["freshwater"] - 10)
+            elif water_rating >= 4:
+                boundary_scores["freshwater"] = min(75, boundary_scores["freshwater"] + 20)
+        except (ValueError, TypeError):
+            pass
+    
+    # Waste reduction actions
+    if "waste_reduction" in responses_dict:
+        waste_actions = responses_dict["waste_reduction"]
+        if isinstance(waste_actions, list):
+            reduction_factor = len(waste_actions) * 5  # 5 points per action
+            boundary_scores["aerosols"] = max(20, boundary_scores["aerosols"] - reduction_factor)
+            boundary_scores["biogeochemical"] = max(25, boundary_scores["biogeochemical"] - reduction_factor)
+    
+    # Calculate composite score
+    composite_score = 0.0
+    for boundary, score in boundary_scores.items():
+        weight = PLANETARY_BOUNDARIES[boundary].weight
+        composite_score += score * weight
+    
+    # Determine grade
+    grade = calculate_grade(composite_score)
+    
+    return {
+        "items": [],
+        "per_boundary_averages": boundary_scores,
+        "composite": round(composite_score, 1),
+        "grade": grade,
+        "recommendations": generate_recommendations(boundary_scores, []),
+        "boundary_details": create_boundary_details(boundary_scores, []),
+        "methodology": {
+            "framework": "Stockholm Resilience Centre Planetary Boundaries",
+            "version": "2.0",
+            "boundaries_included": list(PLANETARY_BOUNDARIES.keys()),
+            "weighting_scheme": {k: v.weight for k, v in PLANETARY_BOUNDARIES.items()},
+            "based_on": "quiz_responses"
+        }
+    }
+
 # Export main functions
 __all__ = [
     'calculate_ecoscore',
+    'calculate_ecoscore_from_quiz_responses',
     'score_item',
     'score_batch',
     'normalize_boundary_score',

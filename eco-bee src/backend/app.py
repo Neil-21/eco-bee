@@ -1,7 +1,7 @@
-from fastapi import FastAPI, File, UploadFile, Form, HTTPException
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
 from typing import List, Optional, Dict, Any, Union
 import base64
 import io
@@ -14,7 +14,7 @@ from datetime import datetime
 import uuid
 
 # Enhanced imports
-from ecoscore import calculate_ecoscore, score_item, PLANETARY_BOUNDARIES
+from ecoscore import calculate_ecoscore, calculate_ecoscore_from_quiz_responses, score_item, PLANETARY_BOUNDARIES
 from product_database import get_product_info, get_sustainability_alternatives, product_db
 from recommender import get_recommendations, get_action_info, get_campus_resources
 from barcode_scanner import create_scanner  # Add barcode scanner import
@@ -315,26 +315,48 @@ def read_barcode_with_pixtral(image_bytes: bytes) -> Optional[str]:
 
 @app.post("/api/intake", response_model=IntakeResponse)
 async def enhanced_intake(
-    request: IntakeRequest
+    request: Request
 ):
     """Enhanced intake endpoint with comprehensive scoring"""
-    session_id = request.session_id or str(uuid.uuid4())
+    try:
+        # Get raw request body for debugging
+        body = await request.body()
+        body_str = body.decode('utf-8')
+        print(f"🐛 DEBUG: Raw request body: {body_str}")
+        
+        # Parse and validate the request
+        import json
+        body_data = json.loads(body_str)
+        request_obj = IntakeRequest(**body_data)
+        
+        print(f"🐛 DEBUG: Parsed request: {request_obj}")
+        print(f"🐛 DEBUG: Quiz responses count: {len(request_obj.quiz_responses)}")
+        print(f"🐛 DEBUG: Items count: {len(request_obj.items)}")
+        print(f"🐛 DEBUG: Session ID: {request_obj.session_id}")
+        print(f"🐛 DEBUG: User ID: {request_obj.user_id}")
+        
+        session_id = request_obj.session_id or str(uuid.uuid4())
     
-    # Process items and calculate scores
-    items_for_scoring = []
-    for item in request.items:
-        item_dict = {
-            "type": item.type,
-            "category": item.category,
-            "materials": item.materials,
-            "barcode": item.barcode
-        }
-        items_for_scoring.append(item_dict)
-    
-    # Calculate EcoScore
-    scoring_result = None
-    if items_for_scoring:
-        score_data = calculate_ecoscore(items_for_scoring)
+        # Process items and calculate scores
+        items_for_scoring = []
+        for item in request_obj.items:
+            item_dict = {
+                "type": item.type,
+                "category": item.category,
+                "materials": item.materials,
+                "barcode": item.barcode
+            }
+            items_for_scoring.append(item_dict)
+        
+        # Calculate EcoScore
+        # Always calculate a score, either from items or from quiz responses
+        if items_for_scoring:
+            # Score based on actual items (food/clothing scanned)
+            score_data = calculate_ecoscore(items_for_scoring)
+        else:
+            # Score based on quiz responses when no items are available
+            score_data = calculate_ecoscore_from_quiz_responses(request_obj.quiz_responses)
+        
         scoring_result = ScoringResult(
             items=score_data["items"],
             per_boundary_averages=BoundaryScore(**score_data["per_boundary_averages"]),
@@ -343,23 +365,30 @@ async def enhanced_intake(
             recommendations=score_data["recommendations"],
             boundary_details=score_data["boundary_details"]
         )
+        
+        # Get alternatives for barcoded items
+        alternatives = []
+        for item in request_obj.items:
+            if item.barcode:
+                item_alternatives = get_sustainability_alternatives(item.barcode)
+                if item_alternatives:
+                    alternatives.extend(item_alternatives)
+        
+        return IntakeResponse(
+            items=request_obj.items,
+            quiz_responses=request_obj.quiz_responses,
+            scoring_result=scoring_result,
+            session_id=session_id,
+            timestamp=datetime.now(),
+            alternatives=alternatives if alternatives else None
+        )
     
-    # Get alternatives for barcoded items
-    alternatives = []
-    for item in request.items:
-        if item.barcode:
-            item_alternatives = get_sustainability_alternatives(item.barcode)
-            if item_alternatives:
-                alternatives.extend(item_alternatives)
-    
-    return IntakeResponse(
-        items=request.items,
-        quiz_responses=request.quiz_responses,
-        scoring_result=scoring_result,
-        session_id=session_id,
-        timestamp=datetime.now(),
-        alternatives=alternatives if alternatives else None
-    )
+    except ValidationError as e:
+        print(f"🐛 DEBUG: Validation error: {e}")
+        raise HTTPException(status_code=422, detail=f"Validation error: {str(e)}")
+    except Exception as e:
+        print(f"🐛 DEBUG: General error: {e}")
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 @app.post("/api/classify-image")
 async def classify_image(

@@ -256,10 +256,16 @@ export const createQuizResponse = (
   question: QuizQuestion,
   answer: any
 ): QuizResponse => {
+  // Convert numeric answers to strings for backend compatibility
+  let processedAnswer = answer;
+  if (typeof answer === "number") {
+    processedAnswer = answer.toString();
+  }
+
   return {
     question_id: question.id,
     question_text: question.text,
-    answer: answer,
+    answer: processedAnswer,
     category: question.category,
   };
 };
