@@ -244,7 +244,7 @@ export default function ChatInterface({ onComplete }: ChatInterfaceProps) {
     const currentQuestion = sessionData.currentQuestion || 1;
     
     // Store the answer
-    setSessionData(prev => ({
+    setSessionData((prev: any) => ({
       ...prev,
       [`question_${currentQuestion}`]: input,
       currentQuestion: currentQuestion + 1
@@ -331,7 +331,7 @@ export default function ChatInterface({ onComplete }: ChatInterfaceProps) {
       }
     };
     
-    setSessionData(prev => ({ ...prev, ecoScore: mockEcoScore }));
+    setSessionData((prev: any) => ({ ...prev, ecoScore: mockEcoScore }));
     
     addBotMessage(
       `🎯 **Your EcoScore: ${mockEcoScore.composite}/100 (Grade: ${mockEcoScore.grade})**\n\nThis means you're putting moderate pressure on Earth's systems. There's definitely room for improvement, but you're not in the red zone!`,
@@ -358,7 +358,7 @@ export default function ChatInterface({ onComplete }: ChatInterfaceProps) {
 
   const handleReflection = (input: string) => {
     setChatState("feedback");
-    setSessionData(prev => ({ ...prev, reflection: input }));
+    setSessionData((prev: any) => ({ ...prev, reflection: input }));
     
     addBotMessage(
       "That's a great choice! 🌟 Every small action adds up to make a real difference.",
@@ -383,7 +383,7 @@ export default function ChatInterface({ onComplete }: ChatInterfaceProps) {
 
   const handleFeedback = (input: string) => {
     setChatState("complete");
-    setSessionData(prev => ({ ...prev, feedback: input }));
+    setSessionData((prev: any) => ({ ...prev, feedback: input }));
     
     addBotMessage(
       "Thank you so much! 🙏 Your feedback helps me become a better sustainability companion.",
